@@ -2,9 +2,10 @@ export class Episodes {
   constructor(
     private id: string,
     private title: string,
+    private length: number,
     private link: string,
     private synopsis: string,
-    private picture: string,
+    private serieId: string,
   ) {}
   
   public getId(): string {
@@ -15,6 +16,10 @@ export class Episodes {
     return this.title
   }
 
+  public getLength(): number {
+    return this.length
+  }
+
   public getLink(): string {
     return this.link
   }
@@ -23,7 +28,7 @@ export class Episodes {
     return this.synopsis
   }
     
-  public getPicture(): string {
-    return this.picture
+  public getSerieId(): string {
+    return this.serieId
   }
 }
