@@ -1,9 +1,8 @@
-import { MovieGateway } from "../gateways/MovieGateway";
 import { v4 } from "uuid";
-import { Movies } from "../entities/movies";
 import { SerieGateway } from "../gateways/SerieGateway";
 import { Series } from "../entities/series";
 import { Episodes } from "../entities/episodes";
+import { InvalidParameterError } from "../error/InvalidParameterError";
 
 export class CreateSerieUC {
   constructor(private serieGateway: SerieGateway) {}
@@ -18,7 +17,7 @@ export class CreateSerieUC {
       !input.picture ||
       !input.episodes)
     {
-      throw new Error("Invalid parameters")
+      throw new InvalidParameterError("Invalid parameters")
     }
 
     const formatedDate = new Date(input.date)

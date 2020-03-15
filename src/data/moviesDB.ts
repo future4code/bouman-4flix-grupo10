@@ -29,5 +29,56 @@ export class MoviesDB extends BaseDB implements MovieGateway {
         '${movie.getPicture()}'
       )
     `)
-  } 
+  }
+
+  public async getMedia(mediaData: any): Promise<FoundMedia> {
+    let result 
+    if (mediaData.maxLength && mediaData.minLength) {
+      result = await this.connection.raw(`
+      SELECT id, title, synopsis, picture FROM ${this.moviesTableName}
+      WHERE title LIKE '%${mediaData.query}%'
+      AND duration <= ${mediaData.maxLength}
+      AND duration >= ${mediaData.minLength}
+    `)
+    } else if (mediaData.maxLength) {
+      result = await this.connection.raw(`
+      SELECT id, title, synopsis, picture FROM ${this.moviesTableName}
+      WHERE title LIKE '%${mediaData.query}%'
+      AND duration <= ${mediaData.maxLength}
+    `)
+    } else if (mediaData.minLength) {
+      result = await this.connection.raw(`
+      SELECT id, title, synopsis, picture FROM ${this.moviesTableName}
+      WHERE title LIKE '%${mediaData.query}%'
+      AND duration >= ${mediaData.minLength}
+      `)
+    } else {
+      result = await this.connection.raw(`
+      SELECT id, title, synopsis, picture FROM ${this.moviesTableName}
+      WHERE title LIKE '%${mediaData.query}%' 
+      `)
+    }
+
+    const foundMovies = 
+      result[0] &&
+      result[0].map((el: any) => ({
+        id: el.id,
+        title: el.title,
+        synopsis: el.synopsis,
+        picture: el.picture,
+        type: "movie"
+      }))
+    
+    return foundMovies;
+
+  }
+}
+
+export interface FoundMedia {
+  map(arg0: (el: FoundMedia) => FoundMedia): never;
+  id: string,
+  title: string,
+  synopsis: string,
+  picture: string,
+  type: string
 }

@@ -1,6 +1,7 @@
 import { MovieGateway } from "../gateways/MovieGateway";
 import { v4 } from "uuid";
 import { Movies } from "../entities/movies";
+import { InvalidParameterError } from "../error/InvalidParameterError";
 
 export class CreateMovieUC {
   constructor(private movieGateway: MovieGateway) {}
@@ -9,7 +10,7 @@ export class CreateMovieUC {
     const id = v4()
     
     if (!input.title || !input.date || !input.synopsis || !input.link || !input.length || !input.picture) {
-      throw new Error("Invalid parameters")
+      throw new InvalidParameterError("Invalid parameters")
     }
 
     const formatedDate = new Date(input.date)

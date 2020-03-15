@@ -2,6 +2,7 @@ import { BaseDB } from "./baseDB";
 import { SerieGateway } from "../business/gateways/SerieGateway";
 import { Series } from "../business/entities/series";
 import { Episodes } from "../business/entities/episodes";
+import { FoundMedia } from "./moviesDB";
 
 export class SeriesDB extends BaseDB implements SerieGateway {
   private seriesTableName = "series";
@@ -45,6 +46,47 @@ export class SeriesDB extends BaseDB implements SerieGateway {
       );
       `)
     })
+  }
 
-  } 
+  public async getMedia(mediaData: any): Promise<FoundMedia> {
+    let result 
+    if (mediaData.maxLength && mediaData.minLength) {
+      result = await this.connection.raw(`
+      SELECT id, title, synopsis, picture FROM ${this.seriesTableName}
+      WHERE title LIKE '%${mediaData.query}%'
+      AND duration <= ${mediaData.maxLength}
+      AND duration >= ${mediaData.minLength}
+    `)
+    } else if (mediaData.maxLength) {
+      result = await this.connection.raw(`
+      SELECT id, title, synopsis, picture FROM ${this.seriesTableName}
+      WHERE title LIKE '%${mediaData.query}%'
+      AND duration <= ${mediaData.maxLength}
+    `)
+    } else if (mediaData.minLength) {
+      result = await this.connection.raw(`
+      SELECT id, title, synopsis, picture FROM ${this.seriesTableName}
+      WHERE title LIKE '%${mediaData.query}%'
+      AND duration >= ${mediaData.minLength}
+      `)
+    } else {
+      result = await this.connection.raw(`
+      SELECT id, title, synopsis, picture FROM ${this.seriesTableName}
+      WHERE title LIKE '%${mediaData.query}%' 
+      `)
+    }
+
+    const foundSeries = 
+      result[0] &&
+      result[0].map((el: any) => ({
+        id: el.id,
+        title: el.title,
+        synopsis: el.synopsis,
+        picture: el.picture,
+        type: "serie"
+      }))
+    
+    return foundSeries;
+
+  }
 }
