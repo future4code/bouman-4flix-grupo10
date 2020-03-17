@@ -3,7 +3,8 @@ import { CreateMovieUC } from "../src/business/usecase/createMovie";
 
 
 const movieGatewayImplementation: MovieGateway = {
-  createMovie: jest.fn()
+  createMovie: jest.fn(),
+  getMedia: jest.fn()
 }
 
 describe("Tests CreateMovieUC", () => {
