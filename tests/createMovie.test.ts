@@ -14,6 +14,7 @@ describe("Tests CreateMovieUC", () => {
       .mockReturnValueOnce(undefined)
     
       const uc = new CreateMovieUC(movieGatewayImplementation)
+
       // try {
       //   await uc.execute({
       //     title: "",
@@ -26,7 +27,7 @@ describe("Tests CreateMovieUC", () => {
       // } catch (err) {
       //   expect(err).toEqual(new Error("Missing parameters"))
       // }
-      expect(uc.execute(input: undefined)).rejects.toThrow(new Error("Parametres not defined"))
+      expect(uc.execute(input: undefined)).rejects.toThrow(new Error("Parameters not defined"))
   });
 
 
